@@ -21,7 +21,15 @@ export const getGameUrl = (gameId: string) =>
 	`${STORE_STEAMPOWERED_URL}/app/${gameId}`;
 
 export async function getGameHtml(gameId: string) {
-	const [err, res] = await to(fetch(`${STORE_STEAMPOWERED_URL}/app/${gameId}`));
+	const headers = {
+		"User-Agent":
+			"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Mobile Safari/537.36",
+		"Accept-Language": "es-ES,es;q=0.8",
+	};
+
+	const [err, res] = await to(
+		fetch(`${STORE_STEAMPOWERED_URL}/app/${gameId}`, { headers }),
+	);
 
 	if (err != null) return Err(err);
 	if (!res.ok) {
