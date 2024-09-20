@@ -33,6 +33,9 @@ export async function getGameHtml(gameId: string) {
 		"User-Agent":
 			"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Mobile Safari/537.36",
 		"Accept-Language": "es-ES,es;q=0.8",
+		// Force the request to be from Argentina to get Argentinian Regional USD prices
+		cookie:
+			"steamCountry=AR%7Cd1225bd89e683873618bd05873507837;",
 	};
 
 	const [err, res] = await to(
@@ -127,9 +130,7 @@ export async function formatDescription(steamGame: SteamGame) {
 
 	const formattedGameUSDPrice = formatUSD(steamGame.price.value);
 
-	const [err, gameARSPrice] = await convertDollarToARS(
-		steamGame.price.value,
-	);
+	const [err, gameARSPrice] = await convertDollarToARS(steamGame.price.value);
 	// If there was an error converting the USD price ARS, just return description + USD Price
 	if (err != null) {
 		console.error(err);
