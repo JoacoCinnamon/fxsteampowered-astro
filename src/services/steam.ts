@@ -87,7 +87,7 @@ const getGameImage = ($: CheerioAPI) => {
 };
 
 const getGameWebmVideo = ($: CheerioAPI) => {
-	const videoElement = $("DIV_WITH_VIDEOS_ID");
+	const videoElement = $(DIV_WITH_VIDEOS_ID);
 	if (videoElement.length === 0) return null;
 
 	const videoUrl = videoElement
