@@ -1,6 +1,6 @@
 ---
 import { getGame, getGameUrl } from "@/services/steam";
-// import { isBot } from "@/utils";
+import { isBot } from "@/utils";
 
 const { id } = Astro.params;
 
@@ -8,11 +8,11 @@ if (!id) {
 	return Astro.redirect(getGameUrl("404"), 302);
 }
 
-// const userAgent = Astro.request.headers.get("user-agent") ?? "";
-// // If it's a real user, redirect to the Steam page
-// if (!isBot(userAgent)) {
-// 	return Astro.redirect(getGameUrl("404"), 302);
-// }
+const userAgent = Astro.request.headers.get("user-agent") ?? "";
+// If it's a real user, redirect to the Steam page
+if (!isBot(userAgent)) {
+	return Astro.redirect(getGameUrl("404"), 302);
+}
 
 const [err, steamGame] = await getGame(id);
 if (err != null) {
