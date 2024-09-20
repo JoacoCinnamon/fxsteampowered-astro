@@ -133,8 +133,8 @@ export async function formatDescription(steamGame: SteamGame) {
 	// If there was an error converting the USD price ARS, just return description + USD Price
 	if (err != null) {
 		console.error(err);
-		return `${steamGame.description} \r\n ${formattedGameUSDPrice}`;
+		return `${steamGame.description} \r\n\n ${formattedGameUSDPrice}`;
 	}
 
-	return `${steamGame.description} \r\n ${formattedGameUSDPrice} - ${formatARS(gameARSPrice)}`;
+	return `${steamGame.description} \r\n\n ${formattedGameUSDPrice} - ${formatARS(gameARSPrice)}`;
 }
