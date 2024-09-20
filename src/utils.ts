@@ -31,7 +31,7 @@ const usdFormatter = new Intl.NumberFormat("en-US", {
 });
 export function formatUSD(amount: number | string) {
   const parsedAmount = typeof amount === "string" ? Number.parseFloat(amount) : amount;
-  return `USD${usdFormatter.format(parsedAmount)}`;
+  return `USD${usdFormatter.format(parsedAmount)} 💲`;
 }
 
 const arsFormatter = new Intl.NumberFormat("es-AR", {
