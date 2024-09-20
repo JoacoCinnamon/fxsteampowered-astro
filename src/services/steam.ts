@@ -16,7 +16,7 @@ type GamePrice = {
 };
 
 const STORE_STEAMPOWERED_URL = "https://store.steampowered.com";
-const TITLE_ID = "#appHubName";
+const TITLE_ID = "#appHubAppName";
 const DESCRIPTION_CLASS = ".game_description_snippet";
 const CURRENCY_META_PROPERTY = "meta[itemprop='priceCurrency']";
 const PRICE_META_PROPERTY = "meta[itemprop='price']";
