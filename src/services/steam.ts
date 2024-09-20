@@ -26,20 +26,18 @@ const DIV_WITH_VIDEOS_ID = "#highlight_player_area";
 export const I_HAVE_NO_MOUTH_AND_I_MUST_SCREAM_ID = 245390;
 
 export const getGameUrl = (gameId: string) =>
-	`${STORE_STEAMPOWERED_URL}/app/${gameId}`;
+	`${STORE_STEAMPOWERED_URL}/app/${gameId}?cc=AR`;
 
 export async function getGameHtml(gameId: string) {
 	const headers = {
-		"User-Agent":
+		"user-agent":
 			"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Mobile Safari/537.36",
-		"Accept-Language": "es-ES,es;q=0.8",
-		// Force the request to be from Argentina to get Argentinian Regional USD prices
-		cookie:
-			"steamCountry=AR%7Cd1225bd89e683873618bd05873507837;",
+		"accept-language": "es-AR,es;q=0.8",
+		cookie: "steamCountry=AR%7Cd1225bd89e683873618bd05873507837",
 	};
 
 	const [err, res] = await to(
-		fetch(`${STORE_STEAMPOWERED_URL}/app/${gameId}`, { headers }),
+		fetch(`${STORE_STEAMPOWERED_URL}/app/${gameId}?cc=AR`, { headers }),
 	);
 
 	if (err != null) return Err(err);
