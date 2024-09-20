@@ -1,0 +1,63 @@
+---
+import { getGame, getGameHtml, getGameUrl } from "@/services/steam";
+import { isBot } from "@/utils";
+
+const { id } = Astro.params;
+
+if (!id) {
+	return Astro.redirect(getGameUrl("404"), 302);
+}
+
+// const userAgent = Astro.request.headers.get("user-agent") ?? "";
+// // If it's a real user, redirect to the Steam page
+// if (!isBot(userAgent)) {
+// 	return Astro.redirect(getGameUrl("404"), 302);
+// }
+
+const [err, steamGame] = await getGame(id);
+if (err != null) {
+	console.error(err);
+	const I_HAVE_NO_MOUTH_AND_I_MUST_SCREAM_ID = 245390;
+	return Astro.redirect(getGameUrl(I_HAVE_NO_MOUTH_AND_I_MUST_SCREAM_ID), 302);
+}
+
+---
+
+<html lang="es">
+	<head>
+    <meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{steamGame.title}</title>
+    <meta name="description" content={steamGame.description}>
+    <meta property="og:url" content={getGameUrl(steamGame.id)}>
+    <meta property="og:title" content={steamGame.title}>
+    <meta property="og:description"  content={steamGame.description}>
+		<meta property="og:image" content={steamGame.imagesUrl[0]}>
+		{steamGame.videosUrl && steamGame.videosUrl.length > 0 && 
+			<Fragment>
+				<meta property="og:video" content={steamGame.videosUrl[0]} />
+				<meta property="og:type" content="video" />
+				<meta property="og:video:type" content="video/webm" />
+				<meta property="og:video:width" content="1280" />
+				<meta property="og:video:height" content="720" />
+			</Fragment>
+		}
+    
+    <meta name="twitter:title" content={steamGame.title}>
+    <meta name="twitter:description" content={steamGame.description}>
+    <!-- <meta name="twitter:card" content="summary_large_image"> -->
+    <meta property="twitter:domain" content="store.steampowered">
+    <meta property="twitter:url" content={getGameUrl(steamGame.id)}>
+    <meta name="twitter:image" content={steamGame.imagesUrl[0]}>
+
+		<style>
+			body {
+				background-color: #171d25;
+			}
+		</style>
+  </head>
+  <body>
+  </body>
+</html>
