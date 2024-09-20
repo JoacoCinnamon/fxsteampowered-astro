@@ -6,12 +6,17 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro check && astro build",
-    "preview": "astro preview",
+    "preview": "wrangler pages dev ./dist",
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^4.15.8",
-    "@astrojs/check": "^0.9.3",
-    "typescript": "^5.6.2"
+    "@astrojs/check": "0.9.3",
+    "@astrojs/cloudflare": "11.0.5",
+    "astro": "5.0.0-beta.1",
+    "linkedom": "0.18.5",
+    "typescript": "5.6.2"
+  },
+  "devDependencies": {
+    "wrangler": "3.78.6"
   }
 }
