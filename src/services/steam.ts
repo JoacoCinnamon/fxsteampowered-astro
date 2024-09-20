@@ -15,6 +15,11 @@ type GamePrice = {
 };
 
 const STORE_STEAMPOWERED_URL = "https://store.steampowered.com";
+const TITLE_ID = "#appHubName";
+const DESCRIPTION_CLASS = ".game_description_snippet";
+const CURRENCY_META_PROPERTY = "meta[itemprop='priceCurrency']";
+const PRICE_META_PROPERTY = "meta[itemprop='price']";
+const IMAGE_CLASS = ".game_header_image_full";
 const DIV_WITH_VIDEOS_ID = "#highlight_player_area";
 
 export const getGameUrl = (gameId: string) =>
@@ -51,18 +56,18 @@ export async function getGameHtml(gameId: string) {
 }
 
 const getGameTitle = ($: CheerioAPI) => {
-	const titleElement = $(".apphub_AppName");
+	const titleElement = $(TITLE_ID);
 	return titleElement.text() || null;
 };
 
 const getGameDescription = ($: CheerioAPI) => {
-	const descriptionElement = $(".game_description_snippet");
+	const descriptionElement = $(DESCRIPTION_CLASS);
 	return descriptionElement.text() || null;
 };
 
 const getGamePrice = ($: CheerioAPI) => {
-	const currencyElement = $("meta[itemprop='priceCurrency']").attr("content");
-	const priceElement = $("meta[itemprop='price']").attr("content");
+	const currencyElement = $(CURRENCY_META_PROPERTY).attr("content");
+	const priceElement = $(PRICE_META_PROPERTY).attr("content");
 
 	if (!currencyElement || !priceElement) return null;
 
@@ -73,7 +78,7 @@ const getGamePrice = ($: CheerioAPI) => {
 };
 
 const getGameImage = ($: CheerioAPI) => {
-	const imageElement = $(".game_header_image_full").attr("src");
+	const imageElement = $(IMAGE_CLASS).attr("src");
 	return imageElement || null;
 };
 
