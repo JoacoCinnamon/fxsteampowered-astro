@@ -1,5 +1,6 @@
 import { load, type CheerioAPI } from "cheerio";
-import { Err, Ok, to } from "../utils";
+import { Err, formatARS, formatUSD, Ok, to } from "../utils";
+import { convertDollarToARS } from "./dolar";
 
 type SteamGame = {
 	id: string;
@@ -21,6 +22,8 @@ const CURRENCY_META_PROPERTY = "meta[itemprop='priceCurrency']";
 const PRICE_META_PROPERTY = "meta[itemprop='price']";
 const IMAGE_CLASS = ".game_header_image_full";
 const DIV_WITH_VIDEOS_ID = "#highlight_player_area";
+
+export const I_HAVE_NO_MOUTH_AND_I_MUST_SCREAM_ID = 245390;
 
 export const getGameUrl = (gameId: string) =>
 	`${STORE_STEAMPOWERED_URL}/app/${gameId}`;
@@ -82,7 +85,7 @@ const getGameImage = ($: CheerioAPI) => {
 	return imageElement || null;
 };
 
-const getGameVideo = ($: CheerioAPI) => {
+const getGameWebmVideo = ($: CheerioAPI) => {
 	const videoElement = $("DIV_WITH_VIDEOS_ID");
 	if (videoElement.length === 0) return null;
 
@@ -103,15 +106,35 @@ export async function getGame(gameId: string) {
 	// Load the HTML into Cheerio
 	const $document = load(gameHtml);
 
-	const gameVideo = getGameVideo($document);
+	const gameWebmVideo = getGameWebmVideo($document);
 	const steamGame: SteamGame = {
 		id: gameId,
 		title: getGameTitle($document) ?? "",
 		description: getGameDescription($document) ?? "",
 		price: getGamePrice($document) ?? null,
 		imagesUrl: [getGameImage($document) ?? ""],
-		videosUrl: gameVideo ? [gameVideo] : null,
+		videosUrl: gameWebmVideo ? [gameWebmVideo] : null,
 	};
 
 	return Ok(steamGame);
+}
+
+export async function formatDescription(steamGame: SteamGame) {
+	// If is F2P or doesn't have price, return description as is
+	if (!steamGame.price || steamGame.price.value === "0.00") {
+		return `${steamGame.description} \r\n Free`;
+	}
+
+	const formattedGameUSDPrice = formatUSD(steamGame.price.value);
+
+	const [err, gameARSPrice] = await convertDollarToARS(
+		steamGame.price.value,
+	);
+	// If there was an error converting the USD price ARS, just return description + USD Price
+	if (err != null) {
+		console.error(err);
+		return `${steamGame.description} \r\n ${formattedGameUSDPrice}`;
+	}
+
+	return `${steamGame.description} \r\n ${formattedGameUSDPrice} - ${formatARS(gameARSPrice)}`;
 }

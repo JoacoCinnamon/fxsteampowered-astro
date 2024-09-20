@@ -1,5 +1,10 @@
 ---
-import { getGame, getGameUrl } from "@/services/steam";
+import {
+	formatDescription,
+	getGame,
+	getGameUrl,
+	I_HAVE_NO_MOUTH_AND_I_MUST_SCREAM_ID,
+} from "@/services/steam";
 import { isBot } from "@/utils";
 
 const { id } = Astro.params;
@@ -17,9 +22,10 @@ if (!isBot(userAgent)) {
 const [err, steamGame] = await getGame(id);
 if (err != null) {
 	console.error(err);
-	const I_HAVE_NO_MOUTH_AND_I_MUST_SCREAM_ID = 245390;
 	return Astro.redirect(getGameUrl(I_HAVE_NO_MOUTH_AND_I_MUST_SCREAM_ID), 302);
 }
+
+const formattedDescription = await formatDescription(steamGame);
 ---
 
 <html lang="es">
@@ -29,10 +35,10 @@ if (err != null) {
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{steamGame.title}</title>
-    <meta name="description" content={steamGame.description}>
+    <meta name="description" content={formattedDescription}>
     <meta property="og:url" content={getGameUrl(steamGame.id)}>
     <meta property="og:title" content={steamGame.title}>
-    <meta property="og:description"  content={steamGame.description}>
+    <meta property="og:description"  content={formattedDescription}>
 		<meta property="og:image" content={steamGame.imagesUrl[0]}>
 		{steamGame.videosUrl && steamGame.videosUrl.length > 0 && 
 			<Fragment>
@@ -45,7 +51,7 @@ if (err != null) {
 		}
     
     <meta name="twitter:title" content={steamGame.title}>
-    <meta name="twitter:description" content={steamGame.description}>
+    <meta name="twitter:description" content={formattedDescription}>
     <meta name="twitter:card" content="summary_large_image">
     <meta property="twitter:domain" content="store.steampowered">
     <meta property="twitter:url" content={getGameUrl(steamGame.id)}>
