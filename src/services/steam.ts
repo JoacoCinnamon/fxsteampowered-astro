@@ -19,7 +19,7 @@ type GamePrice = {
 
 const STORE_STEAMPOWERED_URL = "https://store.steampowered.com";
 const TITLE_ID = "#appHubAppName";
-const DESCRIPTION_CLASS = ".game_description_snippet";
+const DESCRIPTION_META_PROPERTY = "meta[property='og:description']";
 const CURRENCY_META_PROPERTY = "meta[itemprop='priceCurrency']";
 const PRICE_META_PROPERTY = "meta[itemprop='price']";
 const IMAGE_CLASS = ".game_header_image_full";
@@ -69,8 +69,8 @@ const getGameTitle = ($: CheerioAPI) => {
 };
 
 const getGameDescription = ($: CheerioAPI) => {
-	const descriptionElement = $(DESCRIPTION_CLASS);
-	return descriptionElement.text() || null;
+	const descriptionElement = $(DESCRIPTION_META_PROPERTY);
+	return descriptionElement.attr("content") || null;
 };
 
 const getGamePrice = ($: CheerioAPI) => {
