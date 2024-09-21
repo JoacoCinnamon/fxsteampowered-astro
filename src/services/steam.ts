@@ -90,15 +90,10 @@ const getGameImage = ($: CheerioAPI) => {
 	return imageElement || null;
 };
 
-const getGameMP4Video = ($: CheerioAPI) => {
-	const videoElement = $(DIV_WITH_VIDEOS_ID);
-	if (videoElement.length === 0) return null;
-
-	const videoUrl = videoElement
-		.find("[data-mp4-source]")
-		.first()
-		.attr("data-mp4-source");
-	return videoUrl || null;
+const getGameMP4Video = (gameHtml: string) => {
+	const STEAM_CDN_REGEXP = /https:\/\/(?:cdn|video)\.akamai\.steamstatic\.com\/store_trailers\/.*?\.(webm|mp4)/;
+	const videoUrl = gameHtml.match(STEAM_CDN_REGEXP)?.[0];
+	return videoUrl;
 };
 
 const getDeveloper = ($: CheerioAPI) => {
@@ -123,7 +118,7 @@ export async function getGame(gameId: string) {
 	// Load the HTML into Cheerio
 	const $document = load(gameHtml);
 
-	const gameMp4Video = getGameMP4Video($document);
+	const gameMp4Video = getGameMP4Video(gameHtml);
 	const steamGame: SteamGame = {
 		id: gameId,
 		title: getGameTitle($document) ?? "",
