@@ -37,7 +37,8 @@ export async function getGameHtml(gameId: string) {
 		"user-agent":
 			"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Mobile Safari/537.36",
 		"accept-language": "es-AR,es;q=0.8",
-		cookie: "steamCountry=AR%7Cd1225bd89e683873618bd05873507837",
+		cookie:
+			"steamCountry=AR%7Cd1225bd89e683873618bd05873507837; timezoneOffset=-10800,0; birthtime=1037505601; wants_mature_content=1;",
 	};
 
 	const [err, res] = await to(
