@@ -49,7 +49,7 @@ const formattedDescription = await formatDescription(steamGame);
 
 		<!-- Videos -->
 		{steamGame.videosUrl && steamGame.videosUrl?.length > 0
-				? <Fragment>
+				? <>
 						<meta property="og:video" content={steamGame.videosUrl[0]} />
 						<meta property="og:video:secure_url" content={steamGame.videosUrl[0]} />
 						<meta property="og:video:type" content="video/mp4" />
@@ -61,10 +61,10 @@ const formattedDescription = await formatDescription(steamGame);
 						<meta name="twitter:player" content={steamGame.videosUrl[0]}>
 						<meta name="twitter:player:width" content="1280">
 						<meta name="twitter:player:height" content="720">
-				</Fragment>
-				: <Fragment>
+				</>
+				: <>
 						<meta name="twitter:card" content="summary_large_image">
-				</Fragment>
+				</>
 		}
 
 		<!-- Game Info -->
