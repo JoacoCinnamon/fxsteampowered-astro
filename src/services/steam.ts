@@ -1,6 +1,6 @@
-import { load, type CheerioAPI } from "cheerio";
 import { Err, formatARS, formatUSD, Ok, to } from "../utils";
 import { convertDollarToARS } from "./dolar";
+import { $, parseHtml } from "@/lib/dom";
 
 type SteamGame = {
 	id: string;
@@ -64,47 +64,54 @@ export async function getGameHtml(gameId: string) {
 	}
 }
 
-const getGameTitle = ($: CheerioAPI) => {
-	const titleElement = $(TITLE_ID);
-	return titleElement.text() || null;
+const getGameTitle = (document: Document) => {
+	const titleElement = $(TITLE_ID, document);
+	if (!titleElement) return null;
+	return titleElement.textContent;
 };
 
-const getGameDescription = ($: CheerioAPI) => {
-	const descriptionElement = $(DESCRIPTION_CLASS);
-	return descriptionElement.text() || null;
+const getGameDescription = (document: Document) => {
+	const descriptionElement = $(DESCRIPTION_CLASS, document);
+	if (!descriptionElement) return null;
+	return descriptionElement.textContent;
 };
 
-const getGamePrice = ($: CheerioAPI) => {
-	const currencyElement = $(CURRENCY_META_PROPERTY).attr("content");
-	const priceElement = $(PRICE_META_PROPERTY).attr("content");
+const getGamePrice = (document: Document) => {
+	const currencyElement = $(CURRENCY_META_PROPERTY, document);
+	const priceElement = $(PRICE_META_PROPERTY, document);
 
 	if (!currencyElement || !priceElement) return null;
 
 	return {
-		currency: currencyElement as "USD" | "ARS",
-		value: priceElement ?? "0.00",
+		currency: (currencyElement.getAttribute("content") ?? "USD") as
+			| "USD"
+			| "ARS",
+		value: priceElement.getAttribute("content") ?? "0.00",
 	};
 };
 
-const getGameImage = ($: CheerioAPI) => {
-	const imageElement = $(IMAGE_CLASS).attr("src");
-	return imageElement || null;
+const getGameImage = (document: Document) => {
+	const imageElement = $(IMAGE_CLASS, document);
+	return imageElement?.getAttribute("src") || null;
 };
 
 const getGameMP4Video = (gameHtml: string) => {
-	const STEAM_CDN_REGEXP = /https:\/\/(?:cdn|video)\.akamai\.steamstatic\.com\/store_trailers\/.*?\.(webm|mp4)/;
+	const STEAM_CDN_REGEXP =
+		/https:\/\/(?:cdn|video)\.akamai\.steamstatic\.com\/store_trailers\/.*?\.(webm|mp4)/;
 	const videoUrl = gameHtml.match(STEAM_CDN_REGEXP)?.[0];
 	return videoUrl;
 };
 
-const getDeveloper = ($: CheerioAPI) => {
-	const developerElement = $(DEVELOPER_ID);
-	return developerElement.children().text() || null;
+const getDeveloper = (document: Document) => {
+	const developerElement = $(DEVELOPER_ID, document);
+	if (!developerElement) return null;
+	return developerElement.children[0].textContent;
 };
 
-const getReviews = ($: CheerioAPI) => {
-	const reviewsElement = $(REVIEWS_ID);
-	const totalOfReviews = reviewsElement.val();
+const getReviews = (document: Document) => {
+	const reviewsElement = $(REVIEWS_ID, document) as HTMLInputElement | null;
+	if (!reviewsElement) return null;
+	const totalOfReviews = reviewsElement.value;
 	if (Array.isArray(totalOfReviews)) return totalOfReviews[0];
 	return totalOfReviews || null;
 };
@@ -116,19 +123,18 @@ export async function getGame(gameId: string) {
 		return Err(err);
 	}
 
-	// Load the HTML into Cheerio
-	const $document = load(gameHtml);
+	const { document } = parseHtml(gameHtml);
 
 	const gameMp4Video = getGameMP4Video(gameHtml);
 	const steamGame: SteamGame = {
 		id: gameId,
-		title: getGameTitle($document) ?? "",
-		description: getGameDescription($document) ?? "",
-		price: getGamePrice($document) ?? null,
-		imagesUrl: [getGameImage($document) ?? ""],
+		title: getGameTitle(document) ?? "",
+		description: getGameDescription(document) ?? "",
+		price: getGamePrice(document) ?? null,
+		imagesUrl: [getGameImage(document) ?? ""],
 		videosUrl: gameMp4Video ? [gameMp4Video] : null,
-		developer: getDeveloper($document) ?? "",
-		reviews: getReviews($document) ?? "",
+		developer: getDeveloper(document) ?? "",
+		reviews: getReviews(document) ?? "",
 	};
 
 	return Ok(steamGame);
