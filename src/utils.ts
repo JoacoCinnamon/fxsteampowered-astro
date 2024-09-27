@@ -26,19 +26,19 @@ export function isBot(userAgent: string): boolean {
 }
 
 const usdFormatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
+  style: "decimal",
   currency: "USD",
 });
 export function formatUSD(amount: number | string) {
   const parsedAmount = typeof amount === "string" ? Number.parseFloat(amount) : amount;
-  return `USD${usdFormatter.format(parsedAmount)} 💲`;
+  return `USD$ ${usdFormatter.format(parsedAmount)}💲`;
 }
 
 const arsFormatter = new Intl.NumberFormat("es-AR", {
-  style: "currency",
+  style: "decimal",
   currency: "ARS",
 });
 export function formatARS(amount: number | string) {
   const parsedAmount = typeof amount === "string" ? Number.parseFloat(amount) : amount;
-  return `ARS${arsFormatter.format(parsedAmount)} 🧉`;
+  return `ARS$ ${arsFormatter.format(parsedAmount)}🧉`;
 }
