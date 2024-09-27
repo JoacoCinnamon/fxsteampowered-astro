@@ -44,8 +44,8 @@ const formattedDescription = await formatDescription(steamGame);
 		<meta property="og:image" content={steamGame.imagesUrl[0]}>
 		<meta property="og:image:secure_url" content={steamGame.imagesUrl[0]}>
 		<meta property="og:image:type" content="image/jpg">
-		<meta property="og:image:width" content="460">
-		<meta property="og:image:height" content="215">
+		<!-- <meta property="og:image:width" content="460">
+		<meta property="og:image:height" content="215"> -->
 
 		<!-- Videos -->
 		{steamGame.videosUrl && steamGame.videosUrl?.length > 0
@@ -53,14 +53,14 @@ const formattedDescription = await formatDescription(steamGame);
 						<meta property="og:video" content={steamGame.videosUrl[0]} />
 						<meta property="og:video:secure_url" content={steamGame.videosUrl[0]} />
 						<meta property="og:video:type" content="video/mp4" />
-						<meta property="og:video:width" content="1280" />
-						<meta property="og:video:height" content="720" />
+						{/* <meta property="og:video:width" content="1280" />
+						<meta property="og:video:height" content="720" /> */}
 						<meta property="og:type" content="video" />
 
 						<meta name="twitter:card" content="player">
 						<meta name="twitter:player" content={steamGame.videosUrl[0]}>
-						<meta name="twitter:player:width" content="1280">
-						<meta name="twitter:player:height" content="720">
+						{/* <meta name="twitter:player:width" content="1280">
+						<meta name="twitter:player:height" content="720"> */}
 				</>
 				: <>
 						<meta name="twitter:card" content="summary_large_image">
